@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:news/category/tab_item.dart';
 import 'package:news/model/SourceResponse.dart';
+import 'package:news/my_theme.dart';
 import 'package:news/news/news_widget.dart';
+import 'package:news/provider/app_confing_provider.dart';
+import 'package:provider/provider.dart';
 
 class TabWidget extends StatefulWidget {
   List <Source> sourceList;
@@ -17,6 +20,8 @@ class _TabWidgetState extends State<TabWidget> {
 
   @override
   Widget build(BuildContext context) {
+    var provider= Provider.of<AppConfigProvider>(context);
+
     return DefaultTabController(
         length: widget.sourceList.length,
         child:
@@ -29,7 +34,9 @@ class _TabWidgetState extends State<TabWidget> {
               });
             },
               isScrollable: true,
-              indicatorColor: Colors.transparent,
+              indicatorColor:  provider.isDarkMode()
+                  ? MyTheme.blackDark
+                  :  Colors.transparent,
               dividerColor: Colors.transparent,
 
               tabAlignment: TabAlignment.start,

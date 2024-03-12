@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:news/model/Category_model.dart';
+import 'package:news/my_theme.dart';
+import 'package:provider/provider.dart';
 
+import '../provider/app_confing_provider.dart';
 import 'category_item.dart';
 
 class CategoryFragment extends StatelessWidget {
@@ -11,6 +14,8 @@ class CategoryFragment extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var provider= Provider.of<AppConfigProvider>(context);
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
@@ -18,14 +23,14 @@ class CategoryFragment extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding:  EdgeInsets.all(8.0),
               child: Text(
                 "Pick your category \n of interest",
                 style: Theme
                     .of(context)
                     .textTheme
-                    .titleMedium,
-              ),
+                    .titleMedium?.copyWith(color:provider.isDarkMode()?MyTheme.whiteColor:MyTheme.blackColor)
+      ),
             ),
             const SizedBox(height: 5,),
             Expanded(

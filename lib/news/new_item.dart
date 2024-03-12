@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:news/model/NewsResponse.dart';
 import 'package:news/my_theme.dart';
 import 'package:intl/intl.dart';
+import 'package:news/provider/app_confing_provider.dart';
+import 'package:provider/provider.dart';
 
 import 'Details_item.dart';
 class NewsItem extends StatelessWidget {
@@ -13,8 +15,11 @@ class NewsItem extends StatelessWidget {
   DateFormat dateFormat = DateFormat('dd-MM-yyyy (HH:mm)');
   @override
   Widget build(BuildContext context) {
+    var provider= Provider.of<AppConfigProvider>(context);
+
     return Container(
-      child: Padding(
+
+    child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -51,19 +56,16 @@ class NewsItem extends StatelessWidget {
             Center(
               child: Text(
                 news.author ?? "",
-                style: Theme.of(context)
-                    .textTheme
-                    .titleMedium
-                    ?.copyWith(color: MyTheme.blackColor),
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(color:provider.isDarkMode()?MyTheme.whiteColor:MyTheme.blackColor),
               ),
             ),
             const SizedBox(height: 5,),
-            Text(news.title ?? "", style: Theme.of(context).textTheme.titleSmall,
+            Text(news.title ?? "", style: Theme.of(context).textTheme.titleSmall?.copyWith(color:provider.isDarkMode()?MyTheme.whiteColor:MyTheme.blackColor),
             ),
             const SizedBox(height: 5,),
             Text(
               news.publishedAt != null ? dateFormat.format(DateTime.parse(news.publishedAt!)) : "",
-              style: Theme.of(context).textTheme.titleSmall,
+              style: Theme.of(context).textTheme.titleSmall?.copyWith(color:provider.isDarkMode()?MyTheme.whiteColor:MyTheme.blackColor),
               textAlign: TextAlign.right,
             ),
           ],

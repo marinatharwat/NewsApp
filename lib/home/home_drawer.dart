@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:news/my_theme.dart';
+import 'package:news/provider/app_confing_provider.dart';
+import 'package:provider/provider.dart';
 
 class HomeDrawer extends StatelessWidget {
   static const int categories = 1;
@@ -11,7 +13,12 @@ class HomeDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var provider= Provider.of<AppConfigProvider>(context);
+
     return Container(
+      color:  provider.isDarkMode()
+        ? MyTheme.blackDark
+        : MyTheme.whiteColor,
       child: Column(
         children: [
           Container(
@@ -32,13 +39,20 @@ class HomeDrawer extends StatelessWidget {
               onTap: () {
                 onsideMenuItem(categories);
               },
-              child: const Row(
+              child:  Row(
                 children: [
-                  Icon(Icons.menu_outlined, size: 30),
+                  Icon(Icons.menu_outlined, size: 30,color:  provider.isDarkMode()
+                      ? MyTheme.whiteColor
+                      : MyTheme.blackColor,),
                   SizedBox(width: 10),
                   Text(
                     "Categories",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18,
+                    color:  provider.isDarkMode()
+                          ? MyTheme.whiteColor
+                          : MyTheme.blackColor,
+
+                    ),
                   ),
                 ],
               ),
@@ -50,13 +64,20 @@ class HomeDrawer extends StatelessWidget {
               onTap: () {
                 onsideMenuItem(settings);
               },
-              child: const Row(
+              child:  Row(
                 children: [
-                  Icon(Icons.settings_rounded),
+                  Icon(Icons.settings_rounded,color:  provider.isDarkMode()
+                      ? MyTheme.whiteColor
+                      : MyTheme.blackColor,),
                   SizedBox(width: 10),
                   Text(
                     "Settings",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18,
+
+                      color:  provider.isDarkMode()
+                          ? MyTheme.whiteColor
+                          : MyTheme.blackColor,
+                    ),
                   ),
                 ],
               ),

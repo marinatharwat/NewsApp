@@ -5,7 +5,9 @@ import 'package:news/category/category_frogment.dart';
 import 'package:news/home/home_drawer.dart';
 import 'package:news/model/Category_model.dart';
 import 'package:news/my_theme.dart';
+import 'package:news/provider/app_confing_provider.dart';
 import 'package:news/settings/settings_screen.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String routeName = 'Home_Screen';
@@ -28,11 +30,19 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var provider= Provider.of<AppConfigProvider>(context);
     return Stack(
       children: [
         Container(
           color: MyTheme.whiteColor,
-          child: Image.asset(
+          child:    provider.isDarkMode()?
+      Image.asset(
+            "assets/images/dark.png",
+            height: double.infinity,
+            width: double.infinity,
+            fit: BoxFit.fill,
+          ):
+          Image.asset(
             "assets/images/splash.png",
             height: double.infinity,
             width: double.infinity,
@@ -40,7 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         Scaffold(
-            backgroundColor: Colors.white,
+            backgroundColor: Colors.transparent,
             appBar: AppBar(
               centerTitle: true,
               toolbarHeight: MediaQuery.of(context).size.height /6,
@@ -95,7 +105,9 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             drawer: Drawer(
-              child: HomeDrawer(onsideMenuItem: onSideMenuClick),
+              child: HomeDrawer(onsideMenuItem: onSideMenuClick,
+
+              ),
             ),
             body: selectedMenuItem == HomeDrawer.settings
                 ? const SettingScreen()
