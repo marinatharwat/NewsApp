@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:news/Api/api_manager.dart';
 import 'package:news/category/category_details.dart';
@@ -8,6 +10,9 @@ import 'package:news/my_theme.dart';
 import 'package:news/provider/app_confing_provider.dart';
 import 'package:news/settings/settings_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class HomeScreen extends StatefulWidget {
   static const String routeName = 'Home_Screen';
@@ -20,29 +25,47 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   String searchText = '';
-  @override
+  List<String> searchResults = [];
+  TextEditingController _searchController = TextEditingController();
 
-  void updateSearchText(String text) {
-    setState(() {
-      searchText = text;
-    });
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 
+  void fetchSearchResults(String query) async {
+    String url = 'https://newsapi.org/v2/everything?q=$query&apiKey=5f90715b5adf4ba694391e3f7479879f';
+    try {
+      final response = await http.get(Uri.parse(url));
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> jsonData = json.decode(response.body);        setState(() {
+          final List<dynamic> articles = jsonData['articles'];
+        });
+      } else {
+        throw Exception('Failed to load search results');
+      }
+    } catch (error) {
+      print('Error fetching search results: $error');
+    }
+  }
   @override
   Widget build(BuildContext context) {
     var provider= Provider.of<AppConfigProvider>(context);
+
     return Stack(
       children: [
         Container(
           color: MyTheme.whiteColor,
-          child:    provider.isDarkMode()?
-      Image.asset(
+          child: provider.isDarkMode()
+              ? Image.asset(
             "assets/images/dark.png",
             height: double.infinity,
             width: double.infinity,
             fit: BoxFit.fill,
-          ):
-          Image.asset(
+          )
+              : Image.asset(
             "assets/images/splash.png",
             height: double.infinity,
             width: double.infinity,
@@ -50,72 +73,75 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         Scaffold(
-            backgroundColor: Colors.transparent,
-            appBar: AppBar(
-              centerTitle: true,
-              toolbarHeight: MediaQuery.of(context).size.height /6,
-              title: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(height: 10,),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
+          backgroundColor: Colors.transparent,
+          appBar: AppBar(
+            centerTitle: true,
+            toolbarHeight: MediaQuery.of(context).size.height / 6,
+            title: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(height: 10,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(right: 40),
+                      child: Text(
+                        selectedMenuItem == HomeDrawer.settings
+                            ? 'Setting'
+                            : selectedCategory == null
+                            ? 'News App'
+                            : selectedCategory!.id,
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10,),
+                Row(
+                  children: [
+                    Expanded(
+                      child:
                       Padding(
-                        padding: const EdgeInsets.only(right: 40),
-                        child: Text(
-                          selectedMenuItem == HomeDrawer.settings
-                              ? 'Setting'
-                              : selectedCategory == null
-                              ? 'News App'
-                              : selectedCategory!.id,
-                          style: Theme.of(context).textTheme.titleLarge,),
-                      ),],),
-
-                  const SizedBox(height: 20,),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: TextFormField(
-                          onChanged: updateSearchText,
+                        padding: const EdgeInsets.only(right: 20),
+                        child: TextField(
+                          controller: _searchController,
                           decoration: InputDecoration(
-                            hintText: 'Search...',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(25.0),
-                              borderSide: const BorderSide(color: Colors.black),
-                            ),
                             filled: true,
                             fillColor: Colors.white,
-                            contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+                            contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide.none,
+                            ),
+                            suffixIcon: IconButton(
+                              icon: Icon(Icons.search),
+                              onPressed: () {
+                                fetchSearchResults(_searchController.text);
+                              },
+                            ),
                           ),
                         ),
                       ),
-                      IconButton(
-                        icon:  Icon(Icons.search),
-                        onPressed: () {
-                          searchNews(searchText);
-
-
-                        },
-                      ),
-                    ],
-                  ),
-
-                ],
-              ),
+                    ),
+                  ],
+                ),
+              ],
             ),
-            drawer: Drawer(
-              child: HomeDrawer(onsideMenuItem: onSideMenuClick,
-
-              ),
+          ),
+          drawer: Drawer(
+            child: HomeDrawer(
+              onsideMenuItem: onSideMenuClick,
             ),
-            body: selectedMenuItem == HomeDrawer.settings
-                ? const SettingScreen()
-                : selectedCategory == null
-                    ? CategoryFragment(
-                        onCategoryClick: onCategoryClick,
-                      )
-                    : CategoryDetails(category: selectedCategory!))
+          ),
+          body: selectedMenuItem == HomeDrawer.settings
+              ? const SettingScreen()
+              : selectedCategory == null
+              ? CategoryFragment(
+            onCategoryClick: onCategoryClick,
+          )
+              : CategoryDetails(category: selectedCategory!),
+        ),
       ],
     );
   }
@@ -135,13 +161,5 @@ class _HomeScreenState extends State<HomeScreen> {
     selectedCategory = null;
     Navigator.pop(context);
     setState(() {});
-  }
-  void searchNews(String query) async {
-    try {
-      var sourceResponse = await ApiManager.getNewsBySourceId(query);
-    } catch (e) {
-      // التعامل مع أي خطأ يحدث أثناء البحث
-      print('Error searching news: $e');
-    }
   }
 }

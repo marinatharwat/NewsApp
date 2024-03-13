@@ -14,7 +14,10 @@ class NewsWidget extends StatefulWidget {
   @override
   State<NewsWidget> createState() => _NewsWidgetState();
 }
-
+int currentPage = 1;
+void loadMoreData() {
+  currentPage++;
+}
 class _NewsWidgetState extends State<NewsWidget> {
   @override
   Widget build(BuildContext context) {
@@ -60,11 +63,14 @@ class _NewsWidgetState extends State<NewsWidget> {
             }
             var newsList = snapshot.data?.articles ?? [];
             return ListView.builder(
-                itemBuilder: (context,index){
-                  return  NewsItem(news:newsList[index] ,);
-                },
+              itemBuilder: (context, index) {
+                if (index == newsList.length - 1) {
+                  loadMoreData();
+                }
+                // Return your NewsItem widget for the current index
+                return NewsItem(news: newsList[index]);
+              },
               itemCount: newsList.length,
-
             );
           }
         }));
