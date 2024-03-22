@@ -1,5 +1,3 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:news/category/category_details.dart';
 import 'package:news/category/category_frogment.dart';
@@ -22,32 +20,12 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  String searchText = '';
-  List<String> searchResults = [];
-  TextEditingController _searchController = TextEditingController();
 
   @override
   void dispose() {
-    _searchController.dispose();
     super.dispose();
   }
 
-  void fetchSearchResults(String query) async {
-    String url = 'https://newsapi.org/v2/everything?q=$query&apiKey=5f90715b5adf4ba694391e3f7479879f';
-    try {
-      final response = await http.get(Uri.parse(url));
-
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> jsonData = json.decode(response.body);        setState(() {
-          final List<dynamic> articles = jsonData['articles'];
-        });
-      } else {
-        throw Exception('Failed to load search results');
-      }
-    } catch (error) {
-      print('Error fetching search results: $error');
-    }
-  }
   @override
   Widget build(BuildContext context) {
     var provider= Provider.of<AppConfigProvider>(context);
@@ -75,10 +53,8 @@ class _HomeScreenState extends State<HomeScreen> {
           appBar: AppBar(
             centerTitle: true,
             actions: [
-              // isIconClicked ? SearchBox() :
               IconButton(
                 onPressed: () {
-                  // isIconClicked = !isIconClicked;
                   setState(() {
                     showSearch(context: context, delegate: NewsSearch(),);
                   });
@@ -86,16 +62,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 icon: const Icon(Icons.search),
               ),
             ],
-            toolbarHeight: MediaQuery.of(context).size.height / 6,
+            toolbarHeight: MediaQuery.of(context).size.height / 9,
             title: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(height: 10,),
+                const SizedBox(height: 10,),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(right: 40),
+                      padding: const EdgeInsets.only(right: 20),
                       child: Text(
                         selectedMenuItem == HomeDrawer.settings
                             ? 'Setting'

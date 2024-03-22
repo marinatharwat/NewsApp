@@ -44,7 +44,7 @@ class HomeDrawer extends StatelessWidget {
                   Icon(Icons.menu_outlined, size: 30,color:  provider.isDarkMode()
                       ? MyTheme.whiteColor
                       : MyTheme.blackColor,),
-                  SizedBox(width: 10),
+                  const SizedBox(width: 10),
                   Text(
                     "Categories",
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18,

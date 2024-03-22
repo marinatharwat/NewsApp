@@ -1,10 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:news/Api/api_manager.dart';
 import 'package:news/model/NewsResponse.dart';
+import 'package:news/my_theme.dart';
 import 'package:news/news/new_item.dart';
 
-
 class NewsSearch extends SearchDelegate {
+  @override
+  ThemeData appBarTheme(BuildContext context) {
+    return ThemeData(
+      appBarTheme: AppBarTheme(
+      color: MyTheme.lightGreen,
+      ),
+      inputDecorationTheme: const InputDecorationTheme(
+        border: InputBorder.none,
+      ),
+    );
+  }
+
   late Future<NewsResponse> getNewsDataModel;
 
   NewsSearch() {
@@ -22,7 +34,6 @@ class NewsSearch extends SearchDelegate {
       ),
     ];
   }
-
   @override
   Widget? buildLeading(BuildContext context) {
     return IconButton(
@@ -63,7 +74,8 @@ class NewsSearch extends SearchDelegate {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    return const Center(
+    return const
+    Center(
       child: Text('Search',
         style: TextStyle(color: Colors.black),
       ),

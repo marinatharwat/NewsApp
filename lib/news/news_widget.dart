@@ -22,7 +22,7 @@ class _NewsWidgetState extends State<NewsWidget> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<NewsResponse?>(
-        future: ApiManager.getNewsBySourceId(),
+        future: ApiManager.getNewsBySourceId(sourceId: widget.source.id??""),
 
         builder: ((context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -39,7 +39,7 @@ class _NewsWidgetState extends State<NewsWidget> {
                     const Text("Something went wrong "),
                     ElevatedButton(
                         onPressed: () {
-                          ApiManager.getNewsBySourceId();
+                          ApiManager.getNewsBySourceId(sourceId: widget.source.id??"");
                           setState(() {});
                         },
                         child: const Text("Try Aga in"))
@@ -53,7 +53,7 @@ class _NewsWidgetState extends State<NewsWidget> {
                   Text(snapshot.data?.message ?? ""),
                   ElevatedButton(
                     onPressed: () {
-                      ApiManager.getNewsBySourceId();
+                      ApiManager.getNewsBySourceId(sourceId: widget.source.id??"");
                       setState(() {});
                     },
                     child: const Text("Try Again"),
@@ -76,4 +76,3 @@ class _NewsWidgetState extends State<NewsWidget> {
         }));
   }
 }
-// wwidget.source.id??""
