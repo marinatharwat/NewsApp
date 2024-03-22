@@ -22,6 +22,7 @@ class MyTheme {
       scaffoldBackgroundColor: MyTheme.lightGreen,
       appBarTheme:   AppBarTheme(
         centerTitle: true,
+          titleTextStyle: TextStyle(color: MyTheme.blackColor),
           iconTheme: IconThemeData(
             color:MyTheme.whiteColor,
           ),
@@ -45,6 +46,7 @@ class MyTheme {
       scaffoldBackgroundColor: Colors.transparent,
       appBarTheme:   AppBarTheme(
           centerTitle: true,
+
           iconTheme: IconThemeData(
             color:MyTheme.whiteColor,
           ),

@@ -1,18 +1,16 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:news/Api/api_manager.dart';
 import 'package:news/category/category_details.dart';
 import 'package:news/category/category_frogment.dart';
+import 'package:news/category/new_search.dart';
 import 'package:news/home/home_drawer.dart';
 import 'package:news/model/Category_model.dart';
 import 'package:news/my_theme.dart';
 import 'package:news/provider/app_confing_provider.dart';
 import 'package:news/settings/settings_screen.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+
 
 class HomeScreen extends StatefulWidget {
   static const String routeName = 'Home_Screen';
@@ -76,6 +74,18 @@ class _HomeScreenState extends State<HomeScreen> {
           backgroundColor: Colors.transparent,
           appBar: AppBar(
             centerTitle: true,
+            actions: [
+              // isIconClicked ? SearchBox() :
+              IconButton(
+                onPressed: () {
+                  // isIconClicked = !isIconClicked;
+                  setState(() {
+                    showSearch(context: context, delegate: NewsSearch(),);
+                  });
+                },
+                icon: const Icon(Icons.search),
+              ),
+            ],
             toolbarHeight: MediaQuery.of(context).size.height / 6,
             title: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -97,35 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 10,),
-                Row(
-                  children: [
-                    Expanded(
-                      child:
-                      Padding(
-                        padding: const EdgeInsets.only(right: 20),
-                        child: TextField(
-                          controller: _searchController,
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Colors.white,
-                            contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: BorderSide.none,
-                            ),
-                            suffixIcon: IconButton(
-                              icon: Icon(Icons.search),
-                              onPressed: () {
-                                fetchSearchResults(_searchController.text);
-                              },
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+
               ],
             ),
           ),
